@@ -12,56 +12,53 @@
 		    -moz-transform:rotateY(180deg); /* Firefox */
 		}
 	</style>
+	<script src="./ClientGame.js"></script>
+	<script src="./js/headtrackr.min.js"></script>
 </head>
 <body>
-	<script src="./js/headtrackr.min.js"></script>
-
-	<canvas id="canvasInput" width="700" height="500" style="display:none"></canvas>
-	<video id="inputVideo" autoplay loop width="700" height="500"></video>
+	<canvas id="canvasInput" width="320" height="240" style="display:none"></canvas>
+	<video id="inputVideo" autoplay loop width="320" height="240"></video>
 	<canvas id="overlay" width="700" height="500" style="border:2px solid black"></canvas>
 	<p id="coords"></p>
-	
+	<button onclick="gameStart()">Start</button>
+
 	<script type="text/javascript">
+	// ================================= Init ====================================
+
 	var videoInput = document.getElementById('inputVideo'),
 		canvasElement = document.getElementById("canvasInput"),
 		canvasOverlay = document.getElementById("overlay"),
 		context = canvasOverlay.getContext("2d");
 
-function drawTriangle(oX, oY, color, direction) {
-    // the triangle
-    context.beginPath();
-    context.moveTo(oX + 50, oY);
-    if (direction === 'down')
-    	context.lineTo(oX, oY + 80);
-    else
-    	context.lineTo(oX, oY - 80);
-    context.lineTo(oX - 50, oY);
-    context.closePath();
+	// ================================= Game ====================================
 
-    // the outline
-    context.lineWidth = 10;
-    context.strokeStyle = color;
-    context.stroke();
+	var run = false;
+	function step(timestamp) {
+		if(!run) return;
+	  hsUpdate();
+	  hsRender();
 
-    // the fill color
-    context.fillStyle = color;
-    context.fill();
-}
+	  window.requestAnimationFrame(step);
+	}
 
+	function gameStart() {
+		console.log('start');
+		hsStart(context);
+		run = true;
+		window.requestAnimationFrame(step);
+	}
 
-drawTriangle(100, 500, 'blue', 'up');
+	// ============================ Face tracker =================================
 
 	var htracker = new headtrackr.Tracker({calcAngles : true, ui : false, headPosition : false});
 	htracker.init(videoInput, canvasElement);
-	
-	document.addEventListener("facetrackingEvent", function( event ) {
-		var c = document.getElementById('coords');
-		c.innerHTML = "X: " + event.x + ", Y: " + event.y + ", Angle: " + event.angle + ", Width: " + event.width + ", Height: " + event.height;
-		context.clearRect(0, 0, 700, 500);
-		drawTriangle(700 - (event.x + (event.width / 2)), 500, 'red', 'up');
-	});
-	
 	htracker.start();
+
+	document.addEventListener("facetrackingEvent", function( event ) {
+		var percentageX = 100 / 320 * (event.x + (event.width / 2));
+		playerOne.X = 700 - Math.round(700 * (percentageX / 100));
+	});
+
 	</script>
 </body>
 </html>
