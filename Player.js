@@ -12,10 +12,10 @@ class Player {
     this.hp = 100
     this.direction = direction
     this.damage = 10
-    this.bulletSpeed = 0.00001
+    this.bulletSpeed = 10
     this.id = id
 
-
+    socket.emit('playerInitialized', id)
 
     socket.on('playerInputUpdate', ({x}) => {
       this.x = x
@@ -41,8 +41,6 @@ class Player {
   shoot() {
     if (this.shootCooldown >= this.shootRechargeTime) {
       this.shootCooldown = 0
-
-      console.log(this.x)
 
       const bullet = new Bullet(this.x, this.y, this.damage, this.bulletSpeed, this.direction, this.socket)
 
@@ -78,10 +76,12 @@ class Player {
       for (let i = 0; i < this.enemy.bullets.length; i++) {
         const enemyBullet = this.enemy.bullets[i]
 
-        const dx = this.x - enemyBullet.y
-        const dy = this.y = enemyBullet.y
+        const dx = this.x - enemyBullet.x
+        const dy = this.y - enemyBullet.y
 
-        if (Math.sqrt(dx * dx + dy * dy) < (enemyBullet.radius * enemyBullet.radius + this.radius * this.radius)) {
+        console.log(Math.sqrt(dx * dx + dy * dy), this.radius)
+
+        if (Math.sqrt(dx * dx + dy * dy) < this.radius) {
           this.hit(enemyBullet.damage)
 
           this.enemy.bullets.splice(i, 1)

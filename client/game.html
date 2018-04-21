@@ -39,6 +39,10 @@
 	socket.on('connect', () => {
 	  gameStart();
 
+	  socket.on('playerInitialized', (id) => {
+	    playerOne.id = id
+	  })
+
 	  socket.on('enemyInputUpdate', ({x}) => {
 	    playerTwo.X = x;
 	  });
@@ -68,6 +72,11 @@
           bullet.y = y;
 		}
       })
+
+	  socket.on('onBulletDestroyed', ({id}) => {
+	    bullets[id].context.clearRect(bullets[id].x - 2.5, bullets[id].y - 2.5, 5, 5)
+	    delete bullets[id]
+	  })
 	})
 
 	function step(timestamp) {

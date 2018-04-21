@@ -3,6 +3,7 @@ var context = null;
 var playerOne = { X: 0, Y: 0, Color:'red' };
 var playerTwo = { X: 0, Y: 0, Color:'blue' };
 var bullets = {} // array: X, Y, id
+const GAME_HEIGHT = 500
 
 function hsStart(playGround) {
   var context = playGround;
@@ -25,24 +26,40 @@ function hsRender(socket) {
   context.clearRect(0, 0, width, height);
 
   // players
+
+  const inverseY = playerOne.id !== 2
+
   drawTriangle(playerOne.X, playerOne.Y, playerOne.Color, 'up');
   drawTriangle(playerTwo.X, playerTwo.Y, playerTwo.Color, 'down');
+
+
+  // if (!inverseY) {
+  //   drawTriangle(playerOne.X, playerOne.Y, playerOne.Color, 'up');
+  //   drawTriangle(playerTwo.X, playerTwo.Y, playerTwo.Color, 'down');
+  // } else {
+  //   drawTriangle(playerOne.X, GAME_HEIGHT - playerOne.Y, playerOne.Color, 'up');
+  //   drawTriangle(playerTwo.X, GAME_HEIGHT - playerTwo.Y, playerTwo.Color, 'down');
+  // }
 
   // bullets
   const bulletIds = Object.keys(bullets)
 
   for(let i = 0; i < bulletIds.length; i++) {
     const bulletId = bulletIds[i]
-    drawBullet(bullets[bulletId].X, bullets[bulletId].Y);
+
+    const bulletY = inverseY ? GAME_HEIGHT - bullets[bulletId].y : bullets[bulletId].y
+    bullets[bulletId].context = drawBullet(bullets[bulletId].x, bulletY, inverseY);
   }
 }
 
 function drawBullet(x, y) {
   context.beginPath();
-  context.arc(100, 75, 5, 0, 2 * Math.PI);
+  context.arc(x, y, 5, 0, 2 * Math.PI);
   context.stroke();
   context.fillStyle = "red";
   context.fill();
+
+  return context
 }
 
 function drawTriangle(oX, oY, color, direction) {

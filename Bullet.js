@@ -12,7 +12,7 @@ class Bullet {
     this.y = y
     this.socket = socket
     this.destroyed = false
-    this.maxLifeTime = 1000
+    this.maxLifeTime = 500
     this.lifeTime = 0
     this.id = uuid()
   }
