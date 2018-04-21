@@ -17,11 +17,11 @@ class Game {
   handlePlayerConnection() {
     this.io.on('connection', (socket) => {
       if (!this.player1) {
-        this.player1 = new Player(socket, 55)
+        this.player1 = new Player(socket, 55, 1)
 
         console.log('Player 1 connected', socket.id)
       } else if (!this.player2) {
-        this.player2 = new Player(socket, 500 - 55)
+        this.player2 = new Player(socket, 500 - 55, -1)
 
         console.log('Player 2 connected', socket.id)
       }
