@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<style>
+#myProgress {
+  width: 100%;
+  background-color: #ddd;
+}
+
+#myBar {
+  width: 10%;
+  height: 30px;
+  background-color: #4CAF50;
+  text-align: center;
+  line-height: 30px;
+  color: white;
+}
+</style>
+<body>
+
+<h1>BLOOD Bar</h1>
+
+<div id="myProgress">
+  <div id="myBar" style="width:100%;">100%</div>
+</div>
+
+<br>
+<button onclick="move()">Click Me</button> 
+
+<script>
+var value = 100;
+function move() {
+  var elem = document.getElementById("myBar");
+if(value > 0) {
+  value -= 10;   
+  elem.setAttribute("style", "width:" + value + "%");
+  elem.innerHTML = value + "%";
+
+}
+
+  
+  
+}
+</script>
+
+</body>
+</html>
