@@ -1,0 +1,34 @@
+#mainDiv {
+  display: inline-block;
+  position: fixed;
+  left: -300px;
+  right: 0;
+  width: 1200px;
+  height: 600px;
+  margin: auto;
+}
+
+#vidDiv {
+  float:left;
+  margin: 20px;
+}
+
+#gameDiv {
+  float:left;
+}
+
+#myProgress {
+  width: 100%;
+  background-color: #ddd;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+#myBar {
+  width: 10%;
+  height: 30px;
+  background-color: #4CAF50;
+  text-align: center;
+  line-height: 30px;
+  color: white;
+}
