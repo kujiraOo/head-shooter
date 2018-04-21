@@ -25,9 +25,11 @@ class Player {
   }
 
   update() {
-    this.shoot()
-    this.updateBullets()
-    this.checkCollision()
+    if (this.hp > 0) {
+      this.shoot()
+      this.updateBullets()
+      this.checkCollision()
+    }
   }
 
   updateBullets() {
@@ -79,7 +81,7 @@ class Player {
         const dx = this.x - enemyBullet.x
         const dy = this.y - enemyBullet.y
 
-        console.log(Math.sqrt(dx * dx + dy * dy), this.radius)
+        // console.log(Math.sqrt(dx * dx + dy * dy), this.radius)
 
         if (Math.sqrt(dx * dx + dy * dy) < this.radius) {
           this.hit(enemyBullet.damage)

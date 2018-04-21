@@ -24,12 +24,12 @@
 			<video id="inputVideo" autoplay loop width="320" height="240"></video>
 		</div>
 		<div id="gameDiv">
-			<div id="myProgress">
-			  <div id="myBar" style="width:100%;">100%</div>
+			<div class="myProgress">
+			  <div id="hp-player2" class="myBar" style="width:100%;">100%</div>
 			</div>
 			<canvas id="overlay" width="700" height="500" style="border:2px solid black"></canvas>
-			<div id="myProgress">
-			  <div id="myBar" style="width:100%;">100%</div>
+			<div class="myProgress">
+			  <div id="hp-player1" class="myBar" style="width:100%;">100%</div>
 			</div>
 		</div>
 	</div>
@@ -90,7 +90,24 @@
 		clearCircle(bullets[id].context, bullets[id].x, bullets[id].y, 5)
 	    delete bullets[id]
 	  })
+
+	  socket.on('hit', ({hp}) => {
+	    updateHpBar(hp, 1)
+	  })
+
+	  socket.on('enemyHit', ({hp}) => {
+	    updateHpBar(hp, 2)
+	  })
 	})
+
+    function updateHpBar(hp, playerId) {
+	  const elemId = playerId === 1 ? 'hp-player1' : 'hp-player2'
+
+      var elem = document.getElementById(elemId);
+
+        elem.setAttribute("style", "width:" + hp + "%");
+        elem.innerHTML = hp + "%";
+    }
 
 	function step(timestamp) {
 		if(!run) return;

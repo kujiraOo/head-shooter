@@ -2,7 +2,7 @@ const uuid = require('uuid/v1')
 
 class Bullet {
   constructor(x, y, damage, speed, direction, socket) {
-    console.log(x)
+    // console.log(x)
 
     this.speed = speed
     this.radius = 5
