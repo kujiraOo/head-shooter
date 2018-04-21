@@ -3,7 +3,7 @@
 	<title>facetracking</title>
 	<meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
 	<meta charset="utf-8">
-
+	<title>head-shooter</title>
 	<style type="text/css">
 		#inputVideo
 		{
@@ -12,15 +12,27 @@
 		    -moz-transform:rotateY(180deg); /* Firefox */
 		}
 	</style>
+	<link rel="stylesheet" type="text/css" href="game.css">
 	<script src="./js/socket.io.js"></script>
 	<script src="./ClientGame.js"></script>
 	<script src="./js/headtrackr.min.js"></script>
 </head>
 <body>
-	<canvas id="canvasInput" width="320" height="240" style="display:none"></canvas>
-	<video id="inputVideo" autoplay loop width="320" height="240"></video>
-	<canvas id="overlay" width="700" height="500" style="border:2px solid black"></canvas>
-	<p id="coords"></p>
+	<div id="mainDiv">
+		<div id="vidDiv">
+			<canvas id="canvasInput" width="320" height="240" style="display:none"></canvas>
+			<video id="inputVideo" autoplay loop width="320" height="240"></video>
+		</div>
+		<div id="gameDiv">
+			<div id="myProgress">
+			  <div id="myBar" style="width:100%;">100%</div>
+			</div>
+			<canvas id="overlay" width="700" height="500" style="border:2px solid black"></canvas>
+			<div id="myProgress">
+			  <div id="myBar" style="width:100%;">100%</div>
+			</div>
+		</div>
+	</div>
 	<!--<button onclick="gameStart()">Start</button>-->
 
 	<script type="text/javascript">
