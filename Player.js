@@ -16,6 +16,8 @@ class Player {
 
     socket.on('playerInputUpdate', ({x}) => {
       this.x = x
+
+      socket.broadcast('enemyInputUpdate', {x})
     })
   }
 
@@ -37,9 +39,13 @@ class Player {
     if (this.shootCooldown >= this.shootRechargeTime) {
       this.shootCooldown = 0
 
-      const bullet = new Bullet(this.x, this.y, this.damage, this.bulletSpeed, this.direction)
+      const bullet = new Bullet(this.x, this.y, this.damage, this.bulletSpeed, this.direction, this.socket)
 
       this.bullets.push(bullet)
+
+      console.log("Player shoots")
+
+      socket.emit('enemyBulletInstantiated', bullet)
     } else {
       this.shootCooldown++
     }
@@ -49,7 +55,10 @@ class Player {
     this.hp -= damage
 
     if (this.hp <= 0) {
-      // send dead message
+      this.socket.emit('playerDead')
+      this.socket.broadcast('enemyDead')
+
+      console.log('Player dead')
     }
   }
 
@@ -65,6 +74,11 @@ class Player {
           this.hit(enemyBullet.damage)
 
           this.enemy.bullets.splice(i, 1)
+
+          enemyBullet.destroyed = true
+
+          this.socket.emit('bulletDestroyed')
+          this.socket.broadcast('enemyBulletDestroyed')
         }
       }
     }

@@ -9,7 +9,7 @@ class Game {
 
     setInterval(() => {
       this.update()
-    }, 1/30)
+    }, 1000/30)
 
     console.log('Game')
   }
@@ -26,8 +26,13 @@ class Game {
         console.log('Player 2 connected', socket.id)
       }
 
-      this.player2.enemy = this.player1
-      this.player1.enemy = this.player2
+      if (this.player2) {
+        this.player2.enemy = this.player1
+      }
+
+      if (this.player1) {
+        this.player1.enemy = this.player2
+      }
 
       socket.on('disconnect', () => {
         console.log('disc socket', socket.id)
@@ -46,7 +51,13 @@ class Game {
   }
 
   update() {
-    // console.log('updating game')
+    if (this.player1) {
+      this.player1.update()
+    }
+
+    if (this.player2) {
+      this.player2.update()
+    }
   }
 }
 
