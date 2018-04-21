@@ -1,0 +1,6 @@
+git remote add upstream https://github.com/ORIGINAL_OWNER
+
+git pull upstream master
+
+
+npm install, start
