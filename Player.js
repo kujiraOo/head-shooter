@@ -1,7 +1,7 @@
 const Bullet = require('./Bullet')
 
 class Player {
-  constructor(socket, y, enemy, direction) {
+  constructor(socket, y, direction) {
     this.socket = socket
     this.shootRechargeTime = 10
     this.shootCooldown = 10
@@ -9,7 +9,6 @@ class Player {
     this.y = y
     this.bullets = []
     this.hp = 100
-    this.enemy = enemy
     this.direction = direction
     this.damage = 10
     this.bulletSpeed = 10
@@ -17,7 +16,7 @@ class Player {
     socket.on('playerInputUpdate', ({x}) => {
       this.x = x
 
-      socket.broadcast('enemyInputUpdate', {x})
+      this.socket.broadcast.emit('enemyInputUpdate', {x})
     })
   }
 
@@ -31,6 +30,7 @@ class Player {
     for (let i = 0; i < this.bullets; i++) {
       const bullet = this.bullets[i]
 
+      console.log ('update bullet', i)
       bullet.update()
     }
   }
@@ -45,7 +45,8 @@ class Player {
 
       console.log("Player shoots")
 
-      socket.emit('enemyBulletInstantiated', bullet)
+      this.socket.broadcast.emit('enemyBulletInstantiated', {x: bullet.x, y: bullet.y, id: bullet.id})
+      this.socket.emit('bulletInstantiated', {x: bullet.x, y: bullet.y, id: bullet.id})
     } else {
       this.shootCooldown++
     }
@@ -54,9 +55,14 @@ class Player {
   hit(damage) {
     this.hp -= damage
 
+    this.socket.emit('hit', {hp: this.hp})
+    this.socket.broadcast.emit('enemyHit', {hp: this.hp})
+
+    console.log(this.hp)
+
     if (this.hp <= 0) {
       this.socket.emit('playerDead')
-      this.socket.broadcast('enemyDead')
+      this.socket.broadcast.emit('enemyDead')
 
       console.log('Player dead')
     }
@@ -78,7 +84,7 @@ class Player {
           enemyBullet.destroyed = true
 
           this.socket.emit('bulletDestroyed')
-          this.socket.broadcast('enemyBulletDestroyed')
+          this.socket.broadcast.emit('enemyBulletDestroyed')
         }
       }
     }

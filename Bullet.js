@@ -29,6 +29,8 @@ class Bullet {
 
         this.socket.emit('bulletDestroyed', {id: this.id})
         this.socket.broadcast('enemyBulletDestroyed', {id: this.id})
+
+        console.log('Bullet life time expired, destroying')
       }
     }
   }
