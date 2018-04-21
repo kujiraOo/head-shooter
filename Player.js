@@ -1,17 +1,21 @@
 const Bullet = require('./Bullet')
 
 class Player {
-  constructor(socket, y, direction) {
+  constructor(socket, y, direction, id) {
     this.socket = socket
     this.shootRechargeTime = 20
     this.shootCooldown = 20
     this.radius = 20
+    this.x = 30
     this.y = y
     this.bullets = []
     this.hp = 100
     this.direction = direction
     this.damage = 10
-    this.bulletSpeed = 10
+    this.bulletSpeed = 0.00001
+    this.id = id
+
+
 
     socket.on('playerInputUpdate', ({x}) => {
       this.x = x
