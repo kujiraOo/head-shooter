@@ -5,8 +5,38 @@
     <title>Title</title>
 </head>
 <body>
-ok
+	<canvas id="playGround" width="700" height="700"></canvas>
 <script src="node_modules/socket.io-client/dist/socket.io.js"></script>
 <script type="module" src="index.js"></script>
+
+<script type="text/javascript">
+var canvasElement = document.getElementById("playGround"),
+	context = canvasElement.getContext("2d");
+
+function drawTriangle(oX, oY, color, direction) {
+    // the triangle
+    context.beginPath();
+    context.moveTo(oX + 50, oY);
+    if (direction === 'down')
+    	context.lineTo(oX, oY + 80);
+    else
+    	context.lineTo(oX, oY - 80);
+    context.lineTo(oX - 50, oY);
+    context.closePath();
+
+    // the outline
+    context.lineWidth = 10;
+    context.strokeStyle = color;
+    context.stroke();
+
+    // the fill color
+    context.fillStyle = color;
+    context.fill();
+}
+
+drawTriangle(100, 100, 'red', 'down');
+drawTriangle(100, 500, 'blue', 'up');
+
+    </script>
 </body>
 </html>
