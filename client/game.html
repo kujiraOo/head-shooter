@@ -3,24 +3,62 @@
 	<title>facetracking</title>
 	<meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
 	<meta charset="utf-8">
+
+	<style type="text/css">
+		#inputVideo
+		{
+		    transform: rotateY(180deg);
+		    -webkit-transform:rotateY(180deg); /* Safari and Chrome */
+		    -moz-transform:rotateY(180deg); /* Firefox */
+		}
+	</style>
 </head>
 <body>
 	<script src="./js/headtrackr.min.js"></script>
 
-	<canvas id="inputCanvas" width="320" height="240" style="display:none"></canvas>
-	<video id="inputVideo" autoplay loop width="320" height="240"></video>
+	<canvas id="canvasInput" width="700" height="500" style="display:none"></canvas>
+	<video id="inputVideo" autoplay loop width="700" height="500"></video>
+	<canvas id="overlay" width="700" height="500" style="border:2px solid black"></canvas>
 	<p id="coords"></p>
 	
 	<script type="text/javascript">
-	var videoInput = document.getElementById('inputVideo');
-	var canvasInput = document.getElementById('inputCanvas');
+	var videoInput = document.getElementById('inputVideo'),
+		canvasElement = document.getElementById("canvasInput"),
+		canvasOverlay = document.getElementById("overlay"),
+		context = canvasOverlay.getContext("2d");
+
+function drawTriangle(oX, oY, color, direction) {
+    // the triangle
+    context.beginPath();
+    context.moveTo(oX + 50, oY);
+    if (direction === 'down')
+    	context.lineTo(oX, oY + 80);
+    else
+    	context.lineTo(oX, oY - 80);
+    context.lineTo(oX - 50, oY);
+    context.closePath();
+
+    // the outline
+    context.lineWidth = 10;
+    context.strokeStyle = color;
+    context.stroke();
+
+    // the fill color
+    context.fillStyle = color;
+    context.fill();
+}
+
+
+drawTriangle(100, 500, 'blue', 'up');
 
 	var htracker = new headtrackr.Tracker({calcAngles : true, ui : false, headPosition : false});
-	htracker.init(videoInput, canvasInput);
+	htracker.init(videoInput, canvasElement);
 	
 	document.addEventListener("facetrackingEvent", function( event ) {
 		var c = document.getElementById('coords');
 		c.innerHTML = "X: " + event.x + ", Y: " + event.y + ", Angle: " + event.angle + ", Width: " + event.width + ", Height: " + event.height;
+		context.clearRect(0, 0, 700, 500);
+		drawTriangle(700 - (event.x + (event.width / 2)), 500, 'red', 'up');
 	});
 	
 	htracker.start();
