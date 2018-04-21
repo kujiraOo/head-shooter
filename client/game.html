@@ -74,7 +74,8 @@
       })
 
 	  socket.on('onBulletDestroyed', ({id}) => {
-	    bullets[id].context.clearRect(bullets[id].x - 2.5, bullets[id].y - 2.5, 5, 5)
+	    bullets[id].context
+		clearCircle(bullets[id].context, bullets[id].x, bullets[id].y, 5)
 	    delete bullets[id]
 	  })
 	})
@@ -94,7 +95,14 @@
 		window.requestAnimationFrame(step);
 	}
 
-	gameStart();
+    function clearCircle(context,x,y,radius) {
+	  context.beginPath();
+      context.clearRect(x-radius,y-radius,radius*2,radius*2);
+      context.closePath();
+    }
+
+
+    gameStart();
 
 	// ============================ Face tracker =================================
 

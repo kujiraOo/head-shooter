@@ -20,7 +20,6 @@ class Bullet {
   update() {
     if (!this.destroyed) {
 
-      console.log(this.x, this.y)
       this.y += this.speed * this.direction
 
       // console.log(this.x)
