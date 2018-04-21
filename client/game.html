@@ -1,0 +1,29 @@
+<html lang="en">
+<head>
+	<title>facetracking</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+	<meta charset="utf-8">
+</head>
+<body>
+	<script src="./js/headtrackr.min.js"></script>
+
+	<canvas id="inputCanvas" width="320" height="240" style="display:none"></canvas>
+	<video id="inputVideo" autoplay loop width="320" height="240"></video>
+	<p id="coords"></p>
+	
+	<script type="text/javascript">
+	var videoInput = document.getElementById('inputVideo');
+	var canvasInput = document.getElementById('inputCanvas');
+
+	var htracker = new headtrackr.Tracker({calcAngles : true, ui : false, headPosition : false});
+	htracker.init(videoInput, canvasInput);
+	
+	document.addEventListener("facetrackingEvent", function( event ) {
+		var c = document.getElementById('coords');
+		c.innerHTML = "X: " + event.x + ", Y: " + event.y + ", Angle: " + event.angle + ", Width: " + event.width + ", Height: " + event.height;
+	});
+	
+	htracker.start();
+	</script>
+</body>
+</html>
