@@ -12,7 +12,7 @@
 		    -moz-transform:rotateY(180deg); /* Firefox */
 		}
 	</style>
-	<script src="node_modules/socket.io-client/dist/socket.io.js"></script>
+	<script src="./js/socket.io.js"></script>
 	<script src="./ClientGame.js"></script>
 	<script src="./js/headtrackr.min.js"></script>
 </head>
@@ -85,15 +85,36 @@
 		window.requestAnimationFrame(step);
 	}
 
+	gameStart();
+
 	// ============================ Face tracker =================================
 
 	var htracker = new headtrackr.Tracker({calcAngles : true, ui : false, headPosition : false});
 	htracker.init(videoInput, canvasElement);
 	htracker.start();
 
+	var cameraWidth = 320,
+			cameraPaddingLeft = 90,
+			cameraPaddingRight = 30,
+			playgroundWidth = 700;
+	var cameraPadding = cameraPaddingLeft + cameraPaddingRight;
+
 	document.addEventListener("facetrackingEvent", function( event ) {
-		var percentageX = 100 / 320 * (event.x + (event.width / 2));
-		playerOne.X = 700 - Math.round(700 * (percentageX / 100));
+		var x = (event.x + (event.width / 2));
+
+		// calculate virtual X-coordinate
+		var newX = x - cameraPaddingLeft;
+		if(x < cameraPaddingLeft) {
+			newX = 0;
+		} else if(x > (cameraWidth - cameraPaddingRight)) {
+			newX = cameraWidth - (cameraPadding);
+		}
+
+		// calculate percentage in X (width)
+		var cameraPlayWidth = cameraWidth - cameraPadding;
+		var percentageX = (100 / cameraPlayWidth) * newX;
+
+		playerOne.X = playgroundWidth - Math.round(playgroundWidth * (percentageX / 100));
 
 		socket.emit('playerInputUpdate', {x: playerOne.X})
 	});
