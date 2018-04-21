@@ -3,8 +3,8 @@ const Bullet = require('./Bullet')
 class Player {
   constructor(socket, y, direction) {
     this.socket = socket
-    this.shootRechargeTime = 10
-    this.shootCooldown = 10
+    this.shootRechargeTime = 20
+    this.shootCooldown = 20
     this.radius = 20
     this.y = y
     this.bullets = []
@@ -27,10 +27,9 @@ class Player {
   }
 
   updateBullets() {
-    for (let i = 0; i < this.bullets; i++) {
+    for (let i = 0; i < this.bullets.length; i++) {
       const bullet = this.bullets[i]
 
-      console.log ('update bullet', i)
       bullet.update()
     }
   }
@@ -38,6 +37,8 @@ class Player {
   shoot() {
     if (this.shootCooldown >= this.shootRechargeTime) {
       this.shootCooldown = 0
+
+      console.log(this.x)
 
       const bullet = new Bullet(this.x, this.y, this.damage, this.bulletSpeed, this.direction, this.socket)
 

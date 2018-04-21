@@ -2,6 +2,8 @@ const uuid = require('uuid/v1')
 
 class Bullet {
   constructor(x, y, damage, speed, direction, socket) {
+    console.log(x)
+
     this.speed = speed
     this.radius = 5
     this.damage = damage
@@ -19,8 +21,8 @@ class Bullet {
     if (!this.destroyed) {
       this.y += this.speed * this.direction
 
-      this.socket.emit('playerBulletUpdate', {x: this.x, y: this.y, id: this.id})
-      this.socket.broadcast('enemyBulletUpdate', {x: this.x, y: this.y, id: this.id})
+      this.socket.emit('bulletUpdate', {x: this.x, y: this.y, id: this.id})
+      this.socket.broadcast.emit('enemyBulletUpdate', {x: this.x, y: this.y, id: this.id})
 
       this.lifeTime++
 
@@ -28,7 +30,7 @@ class Bullet {
         this.destroyed = true
 
         this.socket.emit('bulletDestroyed', {id: this.id})
-        this.socket.broadcast('enemyBulletDestroyed', {id: this.id})
+        this.socket.broadcast.emit('enemyBulletDestroyed', {id: this.id})
 
         console.log('Bullet life time expired, destroying')
       }

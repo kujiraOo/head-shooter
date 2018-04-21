@@ -11,13 +11,16 @@ function hsStart(playGround) {
 
   playerOne.Y = height - 20;
   playerTwo.Y = 20;
+
+
 }
 
 function hsUpdate() {
 
 }
 
-function hsRender() {
+
+function hsRender(socket) {
   // clear field
   context.clearRect(0, 0, width, height);
 
@@ -26,8 +29,11 @@ function hsRender() {
   drawTriangle(playerTwo.X, playerTwo.Y, playerTwo.Color, 'down');
 
   // bullets
-  for(var i = 0; i < bullets.length; i++) {
-    drawBullet(bullets[i].X, bullets[i].Y);
+  const bulletIds = Object.keys(bullets)
+
+  for(let i = 0; i < bulletIds.length; i++) {
+    const bulletId = bulletIds[i]
+    drawBullet(bullets[bulletId].X, bullets[bulletId].Y);
   }
 }
 
