@@ -12,6 +12,7 @@
 		    -moz-transform:rotateY(180deg); /* Firefox */
 		}
 	</style>
+	<script src="node_modules/socket.io-client/dist/socket.io.js"></script>
 	<script src="./ClientGame.js"></script>
 	<script src="./js/headtrackr.min.js"></script>
 </head>
@@ -20,7 +21,7 @@
 	<video id="inputVideo" autoplay loop width="320" height="240"></video>
 	<canvas id="overlay" width="700" height="500" style="border:2px solid black"></canvas>
 	<p id="coords"></p>
-	<button onclick="gameStart()">Start</button>
+	<!--<button onclick="gameStart()">Start</button>-->
 
 	<script type="text/javascript">
 	// ================================= Init ====================================
@@ -33,10 +34,46 @@
 	// ================================= Game ====================================
 
 	var run = false;
+	var socket = io();
+
+	socket.on('connect', () => {
+	  gameStart();
+
+	  socket.on('enemyInputUpdate', ({x}) => {
+	    playerTwo.X = x;
+	  });
+
+	  socket.on('enemyBulletInstantiated', (bullet) => {
+        bullets[bullet.id] = bullet;
+      });
+
+      socket.on('bulletInstantiated', (bullet) => {
+        bullets[bullet.id] = bullet;
+      });
+
+      socket.on('bulletUpdate', ({x, y, id}) => {
+		const bullet = bullets[id]
+
+		if (bullet) {
+		  bullet.x = x;
+		  bullet.y = y;
+		}
+	  })
+
+      socket.on('enemyBulletUpdate', ({x, y, id}) => {
+        const bullet = bullets[id]
+
+		if (bullet) {
+          bullet.x = x;
+          bullet.y = y;
+		}
+      })
+	})
+
 	function step(timestamp) {
 		if(!run) return;
 	  hsUpdate();
-	  hsRender();
+	  hsRender(socket);
 
 	  window.requestAnimationFrame(step);
 	}
@@ -57,6 +94,8 @@
 	document.addEventListener("facetrackingEvent", function( event ) {
 		var percentageX = 100 / 320 * (event.x + (event.width / 2));
 		playerOne.X = 700 - Math.round(700 * (percentageX / 100));
+
+		socket.emit('playerInputUpdate', {x: playerOne.X})
 	});
 
 	</script>
